@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:#f4f6f9;
+}
+
+.header {
+    background:#2c3e50;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.container {
+    padding:30px;
+}
+
+.form-box {
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    max-width:700px;
+    margin:auto;
+}
+
+.form-group {
+    margin-bottom:15px;
+}
+
+label {
+    display:block;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+input, textarea, select {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+textarea {
+    height:100px;
+}
+
+.btn {
+    width:100%;
+    padding:12px;
+    background:#6c63ff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn:hover {
+    background:#574fd6;
+}
+
+.logout {
+    color:white;
+    text-decoration:none;
+}
+.table-section { padding:0 40px 40px; }
+        .table-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+        .table-header h2 { font-size:20px; font-weight:700; color:#2d3436; }
+        .total-badge { background:linear-gradient(135deg, #f5af19, #f12711); color:white; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; }
+        .table-wrapper { background:white; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.08); overflow:hidden; }
+        table { width:100%; border-collapse:collapse; }
+        thead { background:linear-gradient(135deg, #f5af19, #f12711); color:white; }
+        thead th { padding:16px 20px; text-align:left; font-size:13px; font-weight:600; }
+        tbody tr { border-bottom:1px solid #f0f0f0; transition:background 0.2s; }
+        tbody tr:hover { background:#fff9f0; }
+        tbody td { padding:14px 20px; font-size:14px; color:#2d3436; vertical-align:middle; }
+        .sr-no { font-weight:700; color:#f12711; }
+        .product-img { width:60px; height:60px; object-fit:cover; border-radius:10px; }
+        .no-img { width:60px; height:60px; background:#f5f5f5; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+        .badge-active   { background:#d4edda; color:#2ecc71; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-inactive { background:#ffe0e0; color:#e74c3c; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .action-btns { display:flex; gap:8px; }
+        .btn-edit   { display:inline-block; background:#2ecc71; color:white; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:600; }
+        .btn-delete { display:inline-block; background:#e74c3c; color:white; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:600; }
+        .empty-state { text-align:center; padding:50px 20px; color:#aaa; }
+        .empty-icon  { font-size:50px; margin-bottom:12px; }
+
+        .msg-error {
+            background:#ffe0e0;
+            color:#e74c3c;
+            padding:10px 14px;
+            border-radius:10px;
+            font-size:20px;
+            margin-bottom:18px;
+            text-align:center;
+        }
+
+        .msg-success {
+            background:#d4edda;
+            color:#2ecc71;
+            padding:10px 14px;
+            border-radius:10px;
+            font-size:20px;
+            margin-bottom:18px;
+            text-align:center;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>Admin Dashboard</h2>
+    <a href="/admin-orders/" style="color:white; text-decoration:none; font-weight:500;">🧾 Orders</a>
+    <a href="/admin-add/" style="color:white; text-decoration:none; font-weight:500;">🧾 Add Products</a>
+    <a href="/logout/" class="logout">Logout</a>
+</div>
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+                    <div class="msg-success">✅ {{ message }}</div>
+                {% else %}
+                    <div class="msg-error">❌ {{ message }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<div class="container">
+
+    
+<div class="table-section">
+        <div class="table-header">
+            <h2>📦 All Products</h2>
+            <span class="total-badge">Total: {{ products.count }}</span>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Discount Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if products %}
+                        {% for product in products %}
+                        <tr>
+                            <td class="sr-no">{{ forloop.counter }}</td>
+                            <td>
+                                {% if product.product_image %}
+                                    <img src="{{ product.product_image.url }}" class="product-img">
+                                {% else %}
+                                    <div class="no-img">📦</div>
+                                {% endif %}
+                            </td>
+                            <td><b>{{ product.product_name }}</b></td>
+                            <td>{{ product.product_title }}</td>
+                            <td>₹{{ product.product_price }}</td>
+                            <td>
+                                {% if product.product_discount_price %}
+                                    ₹<b>{{ product.product_discount_price }}</b> 
+                                {% else %}
+                                    <span style="color:#aaa;">No discount</span>
+                                {% endif %}
+                            </td>
+                            <td>
+    {% if product.product_status == 'active' %}
+        <a href="/toggle-status/{{ product.id }}/"
+           style="display:inline-block;
+                  background:#d4edda;
+                  color:#2ecc71;
+                  padding:6px 16px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:600;
+                  text-decoration:none;
+                  border:2px solid #2ecc71;
+                  cursor:pointer;">
+            ✅ Active
+        </a>
+    {% else %}
+        <a href="/toggle-status/{{ product.id }}/"
+           style="display:inline-block;
+                  background:#ffe0e0;
+                  color:#e74c3c;
+                  padding:6px 16px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:600;
+                  text-decoration:none;
+                  border:2px solid #e74c3c;
+                  cursor:pointer;">
+            ❌ Inactive
+        </a>
+    {% endif %}
+</td>
+                            <td>
+                                <div class="action-btns">
+                                    <a href="/edit-product/{{ product.id }}/" class="btn-edit">✏️ Edit</a>
+                                    <a href="/delete-product/{{ product.id }}/" class="btn-delete">🗑️ Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <div class="empty-icon">📦</div>
+                                    <p>No products added yet. Use the form above to add one!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEasy - User Home</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+        body { background:#f5f5f5; }
+
+        .navbar {
+            background:white;
+            padding:15px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.08);
+            position:sticky;
+            top:0;
+            z-index:100;
+        }
+
+        .logo {
+            font-size:24px;
+            font-weight:800;
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            text-decoration:none;
+        }
+
+        .nav-links { display:flex; gap:30px; align-items:center; }
+        .nav-links a { color:#2d3436; text-decoration:none; font-size:15px; font-weight:500; }
+        .nav-links a:hover { color:#f12711; }
+        .nav-right { display:flex; gap:15px; align-items:center; }
+
+        .cart-btn {
+            background:#f5f5f5;
+            color:#2d3436;
+            padding:8px 18px;
+            border-radius:20px;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .logout-btn {
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            padding:8px 18px;
+            border-radius:20px;
+            border:none;
+            font-size:14px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .hero {
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            padding:80px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:30px;
+        }
+
+        .hero-text h1 { font-size:48px; font-weight:800; margin-bottom:16px; line-height:1.2; }
+        .hero-text p  { font-size:18px; opacity:0.9; margin-bottom:30px; }
+        .hero-btns    { display:flex; gap:15px; flex-wrap:wrap; }
+        .hero-image   { font-size:150px; }
+
+        .btn-white {
+            background:white;
+            color:#f12711;
+            padding:14px 30px;
+            border-radius:25px;
+            text-decoration:none;
+            font-weight:700;
+            font-size:15px;
+        }
+
+        .btn-outline {
+            background:transparent;
+            color:white;
+            padding:14px 30px;
+            border-radius:25px;
+            text-decoration:none;
+            font-weight:700;
+            font-size:15px;
+            border:2px solid white;
+        }
+
+        .stats {
+            display:flex;
+            justify-content:center;
+            gap:30px;
+            padding:40px 20px;
+            flex-wrap:wrap;
+            background:white;
+        }
+
+        .stat-card { text-align:center; padding:20px 40px; }
+        .stat-card h2 {
+            font-size:32px;
+            font-weight:800;
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+        .stat-card p { color:#888; font-size:14px; margin-top:4px; }
+
+        .section { padding:50px 40px; }
+        .section-title { font-size:26px; font-weight:700; color:#2d3436; margin-bottom:30px; text-align:center; }
+
+        .categories { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+
+        .category-card {
+            background:white;
+            border-radius:16px;
+            padding:30px 25px;
+            width:160px;
+            text-align:center;
+            box-shadow:0 4px 20px rgba(0,0,0,0.06);
+            text-decoration:none;
+            color:inherit;
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover { transform:translateY(-5px); box-shadow:0 10px 30px rgba(0,0,0,0.12); }
+        .category-card .icon { font-size:40px; margin-bottom:12px; }
+        .category-card h3 { font-size:14px; font-weight:700; color:#2d3436; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 300px));
+            gap: 24px;
+            justify-content: center;   /* ⭐ KEY FIX */
+        }
+        .product-card {
+            width: 100%;
+            max-width: 300px;
+            background:white;
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:0 6px 25px rgba(0,0,0,0.08);
+            transition:all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform:translateY(-8px) scale(1.02);
+            box-shadow:0 20px 40px rgba(0,0,0,0.15);
+        }
+        .product-image {
+            background:#fff;
+            height:220px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-bottom:1px solid #eee;
+        }       
+
+        .product-image img { width:100%; height:100%; object-fit:contain; padding:10px; }
+        .product-info { padding:20px; }
+        .product-info h3 { font-size:16px; font-weight:700; color:#2d3436; margin-bottom:6px; }
+        .product-info .category { font-size:12px; color:#888; margin-bottom:10px; }
+
+        .product-info .price {
+            font-size:20px;
+            font-weight:800;
+            color:#f12711;
+        }
+
+        .product-info .old-price {
+            font-size:13px;
+            color:#999;
+            text-decoration:line-through;
+            margin-left:8px;
+        }
+        
+        .add-cart-btn {
+            width:100%;
+            padding:10px;
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:14px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .add-cart-btn:hover { opacity:0.9; }
+        .empty-state { text-align:center; padding:50px; color:#aaa; font-size:16px; }
+
+        /* ── PAGINATION ── */
+        .pagination {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:8px;
+            padding:30px 0;
+        }
+
+        .pagination a {
+            padding:8px 16px;
+            background:white;
+            color:#f12711;
+            border:2px solid #f12711;
+            border-radius:8px;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:600;
+            transition:all 0.2s;
+        }
+
+        .pagination a:hover {
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            border-color:transparent;
+        }
+
+        .pagination .current {
+            padding:8px 14px;
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            border-radius:8px;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .pagination .disabled {
+            padding:8px 16px;
+            background:#f5f5f5;
+            color:#ccc;
+            border-radius:8px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .pagination-info {
+            text-align:center;
+            color:#888;
+            font-size:13px;
+            padding-bottom:20px;
+        }
+
+        .footer {
+            background:#2d3436;
+            color:#aaa;
+            text-align:center;
+            padding:30px;
+            font-size:13px;
+            margin-top:60px;
+        }
+
+        .footer span {
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            font-weight:700;
+        }
+         /* ── TABLET (max 768px) ── */
+@media (max-width: 768px) {
+
+    /* Navbar */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-right {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 40px 20px;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .hero-text h1 { font-size: 30px; }
+    .hero-image   { font-size: 80px; }
+
+    .hero-btns { justify-content: center; }
+
+    /* Stats */
+    .stats { gap: 15px; padding: 20px; }
+    .stat-card { padding: 15px 20px; }
+
+    /* Categories */
+    .section { padding: 30px 20px; }
+    .category-card { width: 130px; padding: 20px 15px; }
+
+    /* Products grid */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px;
+    }
+
+    /* Cart layout */
+    .cart-layout {
+        grid-template-columns: 1fr !important;
+        padding: 20px;
+    }
+
+    /* Order summary */
+    .order-summary { position: static; }
+
+    /* Banners */
+    .promo-banner {
+        margin: 0 20px;
+        padding: 30px 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Table */
+    .table-section { padding: 0 20px 20px; }
+
+    /* Form grid */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .form-section { padding: 20px; }
+}
+
+/* ── MOBILE (max 480px) ── */
+@media (max-width: 480px) {
+
+    /* Navbar */
+    .navbar { padding: 12px 16px; }
+    .logo   { font-size: 20px; }
+
+    .nav-links { gap: 10px; font-size: 13px; }
+
+    /* Hero */
+    .hero { padding: 30px 16px; }
+    .hero-text h1 { font-size: 24px; }
+    .hero-text p  { font-size: 15px; }
+    .hero-image   { font-size: 60px; }
+
+    /* Products grid — single column on mobile */
+    .products-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Stats */
+    .stat-card h2 { font-size: 24px; }
+
+    /* Categories */
+    .category-card { width: 110px; padding: 16px 10px; }
+    .category-card .icon { font-size: 30px; }
+
+    /* Cart card */
+    .cart-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-card-actions {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Banners */
+    .promo-banner { margin: 0 16px; padding: 24px 16px; }
+    .promo-banner h2 { font-size: 22px; }
+
+    /* Banners grid */
+    div[style*="grid-template-columns:1fr 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Page header */
+    .page-header { padding: 20px 16px; }
+    .page-header h1 { font-size: 20px; }
+
+    /* Table — horizontal scroll on mobile */
+    .table-wrapper { overflow-x: auto; }
+
+    /* Form */
+    .form-section { padding: 16px; }
+    .form-card { padding: 20px; }
+
+    /* Product detail */
+    .product-section { padding: 16px; flex-direction: column; }
+    .main-image { height: 300px; }
+
+    /* Order card */
+    .order-header { flex-direction: column; }
+
+    /* Buttons */
+    .btn-white, .btn-outline {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    /* Footer */
+    .footer { padding: 20px 16px; font-size: 12px; }
+}
+.table-wrapper {
+    overflow-x: auto;  /* ← table scrolls horizontally on mobile */
+}
+.banners-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .banners-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+    .banners-grid { grid-template-columns: 1fr; }
+}
+.hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #2d3436;
+}
+
+@media (max-width: 768px) {
+    .hamburger { display: block; }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        padding-top: 10px;
+    }
+
+    .nav-links.open { display: flex; }
+}
+    </style>
+</head>
+<body>
+    {% if messages %}
+    {% for message in messages %}
+        <p class="text-white bg-success p-3">✅ {{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="/userhome/" class="logo">🛒 ShopEasy</a>
+        <div class="hamburger" id="hamburger">☰</div>
+        <div class="nav-links">
+            <a href="/userhome/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/categories/">Categories</a>
+            <a href="/orders/">My Orders</a>
+        </div>
+        <div class="nav-right">
+            <span style="font-size:14px; color:#636e72;">
+                👋 Hi, {{ request.user.first_name }}
+            </span>
+            <a href="/cart/" class="cart-btn">🛒 Cart</a>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Shop Smart,<br>Live Better 🛍️</h1>
+            <p>Discover thousands of products at the best prices.<br>Fast delivery, easy returns.</p>
+            <div class="hero-btns">
+                <a href="/products/" class="btn-white">🛒 Shop Now</a>
+                <a href="/categories/" class="btn-outline">Browse Categories</a>
+            </div>
+        </div>
+        <div class="hero-image">🛍️</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card"><h2>50K+</h2><p>Products Available</p></div>
+        <div class="stat-card"><h2>10K+</h2><p>Happy Customers</p></div>
+        <div class="stat-card"><h2>500+</h2><p>Brands</p></div>
+        <div class="stat-card"><h2>24/7</h2><p>Customer Support</p></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="section">
+        <h2 class="section-title">🗂️ Shop by Category</h2>
+        <div class="categories">
+            <a href="/category/electronics/" class="category-card"><div class="icon">📱</div><h3>Electronics</h3></a>
+            <a href="/category/fashion/"     class="category-card"><div class="icon">👗</div><h3>Fashion</h3></a>
+            <a href="/category/home/"        class="category-card"><div class="icon">🏠</div><h3>Home & Living</h3></a>
+            <a href="/category/sports/"      class="category-card"><div class="icon">⚽</div><h3>Sports</h3></a>
+            <a href="/category/books/"       class="category-card"><div class="icon">📚</div><h3>Books</h3></a>
+            <a href="/category/beauty/"      class="category-card"><div class="icon">💄</div><h3>Beauty</h3></a>
+            <a href="/category/toys/"        class="category-card"><div class="icon">🧸</div><h3>Toys</h3></a>
+            <a href="/category/food/"        class="category-card"><div class="icon">🍕</div><h3>Food</h3></a>
+        </div>
+    </div>
+
+    <!-- FEATURED PRODUCTS -->
+<div class="section" style="padding-top:0;">
+    <h2 class="section-title">🔥 Featured Products</h2>
+    <div class="products-grid">
+        {% if products %}
+            {% for product in products %}
+            <div class="product-card">
+                <!-- Click imaage/name to go to detail page -->
+                <a href="/p_details/{{ product.id }}/" style="text-decoration:none;">
+                    <div class="product-image">
+                        {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}">
+                        {% else %}
+                            📦
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.product_name }}</h3>
+                        <p class="category">{{ product.product_title }}</p>
+                        <p class="price">
+                            ₹{{ product.product_discount_price }}
+                            <span class="old-price">₹{{ product.product_price }}</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Add to cart button separate -->
+                <div style="padding:0 20px 20px;">
+                    <a href="/add-to-cart/{{ product.id }}/"
+                       style="display:block; text-align:center; text-decoration:none;
+                              padding:10px; background:linear-gradient(135deg, #f5af19, #f12711);
+                              color:white; border-radius:10px; font-size:14px; font-weight:600;">
+                        🛒 Add to Cart
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">📦 No products yet!</div>
+        {% endif %}
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        {% if products.has_previous %}
+            <a href="?page={{ products.previous_page_number }}">← Previous</a>
+        {% else %}
+            <span class="disabled">← Previous</span>
+        {% endif %}
+
+        {% for num in products.paginator.page_range %}
+            {% if products.number == num %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">Next →</a>
+        {% else %}
+            <span class="disabled">Next →</span>
+        {% endif %}
+    </div>
+
+    {% comment %} <div class="pagination-info">
+        Page {{ products.number }} of {{ products.paginator.num_pages }}
+        — Total {{ products.paginator.count }} Products
+    </div>
+</div>
+        <!-- PAGE INFO -->
+        <div class="pagination-info">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}
+            — Total {{ products.paginator.count }} Products
+        </div>
+
+    </div> {% endcomment %}
+
+    <!-- ── BANNERS ── -->
+    <div style="padding:0 40px; margin-bottom:40px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+
+            <div style="background:linear-gradient(135deg, #f5af19, #f12711);
+                        border-radius:20px; padding:30px;
+                        display:flex; flex-direction:column;
+                        justify-content:space-between; gap:20px;">
+                <div>
+                    <h2 style="color:white; font-size:22px; font-weight:800; margin-bottom:10px;">🎉 Special Offer!</h2>
+                    <p style="color:white; opacity:0.9; font-size:14px;">Get 30% off on your first order. Use code <b>FIRST30</b> at checkout.</p>
+                </div>
+                <a href="/products/" style="background:white; color:#f12711; padding:12px 24px; border-radius:25px; text-decoration:none; font-weight:700; font-size:14px; text-align:center;">Shop Now →</a>
+            </div>
+
+            <div style="background:linear-gradient(135deg, #2d3436, #636e72);
+                        border-radius:20px; padding:30px;
+                        display:flex; flex-direction:column;
+                        justify-content:space-between; gap:20px;">
+                <div>
+                    <h2 style="color:white; font-size:22px; font-weight:800; margin-bottom:10px;">🚚 Free Delivery</h2>
+                    <p style="color:white; opacity:0.9; font-size:14px;">Free delivery on all orders above ₹499. Shop more, save more!</p>
+                </div>
+                <a href="/products/" style="background:linear-gradient(135deg, #f5af19, #f12711); color:white; padding:12px 24px; border-radius:25px; text-decoration:none; font-weight:700; font-size:14px; text-align:center;">Shop Now →</a>
+            </div>
+
+            <div style="background:linear-gradient(135deg, #667eea, #764ba2);
+                        border-radius:20px; padding:30px;
+                        display:flex; flex-direction:column;
+                        justify-content:space-between; gap:20px;">
+                <div>
+                    <h2 style="color:white; font-size:22px; font-weight:800; margin-bottom:10px;">✨ New Arrivals</h2>
+                    <p style="color:white; opacity:0.9; font-size:14px;">Check out our latest collection. Fresh styles added every week!</p>
+                </div>
+                <a href="/products/" style="background:white; color:#764ba2; padding:12px 24px; border-radius:25px; text-decoration:none; font-weight:700; font-size:14px; text-align:center;">Explore →</a>
+            </div>
+
+        </div>
+    </div>
+ 
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>Made with ❤️ by <span>ShopEasy</span> © 2026 — All rights reserved</p>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+    document.getElementById('hamburger').addEventListener('click', function() {
+        document.getElementById('nav-links').classList.toggle('open');
+    });
+</script>
+</body>
+</html>

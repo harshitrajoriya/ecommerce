@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ECommerce</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+
+        body {
+            min-height:100vh;
+            background: linear-gradient(135deg, #f5af19, #f12711);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .card {
+            background:white;
+            border-radius:20px;
+            padding:50px 40px;
+            width:100%;
+            max-width:420px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            text-align:center;
+            margin-bottom:35px;
+        }
+
+        .card-header .icon { font-size:50px; margin-bottom:10px; }
+
+        .card-header h1 {
+            font-size:26px;
+            color:#2d3436;
+            font-weight:700;
+        }
+
+        .card-header p {
+            color:#888;
+            font-size:14px;
+            margin-top:6px;
+        }
+
+        .form-group {
+            margin-bottom:20px;
+        }
+
+        .form-group label {
+            display:block;
+            font-size:13px;
+            font-weight:600;
+            color:#2d3436;
+            margin-bottom:8px;
+        }
+
+        .form-group input {
+            width:100%;
+            padding:13px 16px;
+            border:2px solid #e0e0e0;
+            border-radius:12px;
+            font-size:15px;
+            outline:none;
+            transition:border 0.3s;
+        }
+
+        .form-group input:focus { border-color:#f12711; }
+
+        .submit-btn {
+            width:100%;
+            padding:14px;
+            background: linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            border:none;
+            border-radius:12px;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition:opacity 0.3s;
+        }
+
+        .submit-btn:hover { opacity:0.9; }
+
+        .divider {
+            text-align:center;
+            margin:24px 0;
+            color:#aaa;
+            font-size:13px;
+            position:relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content:'';
+            position:absolute;
+            top:50%;
+            width:42%;
+            height:1px;
+            background:#e0e0e0;
+        }
+
+        .divider::before { left:0; }
+        .divider::after  { right:0; }
+
+        .bottom-link {
+            text-align:center;
+            font-size:14px;
+            color:#888;
+        }
+
+        .bottom-link a {
+            color:#f12711;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .msg-error {
+            background:#ffe0e0;
+            color:#e74c3c;
+            padding:10px 14px;
+            border-radius:10px;
+            font-size:13px;
+            margin-bottom:18px;
+            text-align:center;
+        }
+
+        .msg-success {
+            background:#d4edda;
+            color:#2ecc71;
+            padding:10px 14px;
+            border-radius:10px;
+            font-size:13px;
+            margin-bottom:18px;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="icon">🛒</div>
+            <h1>Welcome Back</h1>
+            <p>Login to your account</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="msg-success">✅ {{ message }}</div>
+                {% else %}
+                    <div class="msg-error">❌ {{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label>🔑 Password</label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Login →</button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <div class="bottom-link">
+            Don't have an account? <a href="{% url 'register' %}">Register here</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+        body { background:#f4f6f9; }
+
+        .header {
+            background:#2c3e50;
+            color:white;
+            padding:15px 30px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .header h2 { font-size:20px; font-weight:700; }
+
+        .header-links { display:flex; gap:20px; align-items:center; }
+        .header-links a {
+            color:white;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:500;
+            opacity:0.85;
+        }
+        .header-links a:hover { opacity:1; }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            padding:30px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .page-header h1 { font-size:24px; font-weight:700; }
+        .page-header p  { font-size:14px; opacity:0.85; margin-top:4px; }
+
+        .total-badge {
+            background:white;
+            color:#f12711;
+            padding:8px 20px;
+            border-radius:20px;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        /* ── TABLE ── */
+        .table-section { padding:30px 40px; }
+
+        .table-wrapper {
+            background:white;
+            border-radius:16px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.08);
+            overflow:hidden;
+        }
+
+        table { width:100%; border-collapse:collapse; }
+
+        thead { background:linear-gradient(135deg, #f5af19, #f12711); color:white; }
+        thead th { padding:16px 20px; text-align:left; font-size:13px; font-weight:600; }
+
+        tbody tr { border-bottom:1px solid #f0f0f0; transition:background 0.2s; }
+        tbody tr:hover { background:#fff9f0; }
+        tbody td { padding:14px 20px; font-size:14px; color:#2d3436; vertical-align:middle; }
+
+        .sr-no { font-weight:700; color:#f12711; }
+
+        /* ── STATUS BADGES ── */
+        .badge-pending   { background:#fff3cd; color:#f39c12; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-confirmed { background:#d4edda; color:#2ecc71; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-shipped   { background:#cce5ff; color:#3498db; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-delivered { background:#d4edda; color:#27ae60; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-cancelled { background:#ffe0e0; color:#e74c3c; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+
+        /* ── ORDER ITEMS PREVIEW ── */
+        .items-preview { display:flex; flex-direction:column; gap:4px; }
+        .item-line { font-size:13px; color:#636e72; }
+
+        /* ── STATUS FORM ── */
+        .status-form { display:flex; gap:8px; align-items:center; }
+
+        .status-select {
+            padding:6px 10px;
+            border:2px solid #e0e0e0;
+            border-radius:8px;
+            font-size:13px;
+            outline:none;
+            cursor:pointer;
+        }
+
+        .status-select:focus { border-color:#f12711; }
+
+        .update-btn {
+            padding:6px 14px;
+            background:linear-gradient(135deg, #f5af19, #f12711);
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-size:12px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .update-btn:hover { opacity:0.9; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state { text-align:center; padding:60px 20px; color:#aaa; }
+        .empty-icon  { font-size:60px; margin-bottom:16px; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background:#2c3e50;
+            color:#aaa;
+            text-align:center;
+            padding:20px;
+            font-size:13px;
+            margin-top:40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h2>🛒 ShopEasy Admin</h2>
+        <div class="header-links">
+            <a href="/admin-add/">📦Add Products</a>
+            <a href="/adminhome/">Home page</a>
+            <a href="/logout/">Logout</a>
+        </div>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <h1>🧾 All Orders</h1>
+            <p>Manage and update customer orders</p>
+        </div>
+        <span class="total-badge">Total Orders: {{ orders.count }}</span>
+    </div>
+
+    <!-- ORDERS TABLE -->
+    <div class="table-section">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Update Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if orders %}
+                        {% for order in orders %}
+                        <tr>
+                            <td class="sr-no">{{ forloop.counter }}</td>
+                            <td><b>#{{ order.id }}</b></td>
+                            <td>
+                                <b>{{ order.user.first_name }}</b><br>
+                                <span style="font-size:12px; color:#888;">{{ order.user.email }}</span>
+                            </td>
+                            <td>
+                                <div class="items-preview">
+                                    {% for item in order.items.all %}
+                                        <span class="item-line">
+                                            📦 {{ item.product.product_name }} × {{ item.quantity }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                <b style="color:#f12711;">₹{{ order.total_price }}</b>
+                            </td>
+                            <td>
+                                <span style="font-size:13px;">
+                                    {{ order.created_at|date:"d M Y" }}<br>
+                                    <span style="color:#888;">{{ order.created_at|date:"h:i A" }}</span>
+                                </span>
+                            </td>
+                            <td>
+                                {% if order.status == 'pending' %}
+                                    <span class="badge-pending">⏳ Pending</span>
+                                {% elif order.status == 'confirmed' %}
+                                    <span class="badge-confirmed">✅ Confirmed</span>
+                                {% elif order.status == 'shipped' %}
+                                    <span class="badge-shipped">🚚 Shipped</span>
+                                {% elif order.status == 'delivered' %}
+                                    <span class="badge-delivered">🎉 Delivered</span>
+                                {% elif order.status == 'cancelled' %}
+                                    <span class="badge-cancelled">❌ Cancelled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="/update-order-status/{{ order.id }}/" class="status-form">
+                                    {% csrf_token %}
+                                    <select name="status" class="status-select">
+                                        <option value="pending"   {% if order.status == 'pending'   %}selected{% endif %}>⏳ Pending</option>
+                                        <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>✅ Confirmed</option>
+                                        <option value="shipped"   {% if order.status == 'shipped'   %}selected{% endif %}>🚚 Shipped</option>
+                                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>🎉 Delivered</option>
+                                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>❌ Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="update-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <div class="empty-icon">🧾</div>
+                                    <p>No orders yet!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>ShopEasy Admin Panel © 2026</p>
+    </div>
+
+</body>
+</html>
